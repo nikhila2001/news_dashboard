@@ -4,34 +4,33 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
-import Badge from "react-bootstrap/Badge";
 import { InputGroup, FormControl, Button } from "react-bootstrap";
 
-function NewsArticle({ selectedCategory }) {
+function NewsArticle({ selectedCategory, newsData, setNewsData}) {
   // Define and initialize state variables
-  const [newsData, setNewsData] = useState([]); // Store news data from the API
+  // const [newsData, setNewsData] = useState([]); // Store news data from the API
   const [searchQuery, setSearchQuery] = useState(""); // Store the user's search query
-  const News_article_api = "https://linesnews.onrender.com/api/news-datas"; // API endpoint
+  const News_article_api = "https://newsapi.org/v2/top-headlines?country=in&apiKey=6963b43a16de41029c6610f27e9cbabc"; // API endpoint
 
   // Fetch news data from an external API when the component mounts
   useEffect(() => {
     axios
       .get(News_article_api)
       .then((response) => {
-        setNewsData(response.data.data); // Update newsData with the fetched data
+        setNewsData(response.data.articles); // Update newsData with the fetched data
       })
       .catch((error) => {
         console.log("There is a problem with axios request");
       });
-  }, []);
+  }, [News_article_api]);
 
   // Filter news articles based on selected category and search query
   const filteredNews = newsData.filter((article) => {
     console.log(selectedCategory);
     return (
       (selectedCategory === null ||
-        article.attributes.category === selectedCategory) &&
-      article.attributes.headline
+        article.source.name === selectedCategory) &&
+      article.title
         .toLowerCase()
         .includes(searchQuery.toLowerCase())
     );
@@ -65,12 +64,13 @@ function NewsArticle({ selectedCategory }) {
             // Render news articles
             filteredNews.map((article) => (
               <Row
-                key={article.id}
+                key={article.source.id}
                 className="border border-secondary shadow mb-3"
               >
                 <Col className="p-2" xs={12} md={4}>
                   <Image
-                    src={article.attributes.newsIcon}
+                    className="h-100"
+                    src={article.urlToImage}
                     alt="News Icon"
                     fluid
                     rounded
@@ -79,26 +79,19 @@ function NewsArticle({ selectedCategory }) {
 
                 <Col className="p-2" xs={12} md={8}>
                   {/* Article headline and category */}
-                  <h2>{article.attributes.headline}</h2>
-                  <p>{`Category - ${article.attributes.category}`}</p>
+                  <h2>{article.title}</h2>
+                  <p>{`Source - ${article.source.name}`}</p>
 
                   <div>
                     {/* Article hashtags */}
-                    {article.attributes.hashtags
-                      .split(",")
-                      .map((hashtag, index) => (
-                        <h5
-                          key={index}
-                          className="badge bg-secondary p-2 me-1 border border-danger text-dark"
-                        >
-                          # {hashtag.trim()}{" "}
-                          {/* Trim to remove leading/trailing spaces */}
-                        </h5>
-                      ))}
+                   {article.description && (
+                    <p className="text-muted">{article.description}</p>
+                   )}
                   </div>
                   <p>
-                    <b>{`Source - ${article.attributes.newsSource}`}</b>
+                    <b>{`Published At - ${article.publishedAt}`}</b>
                   </p>
+                  <a href={article.url} target="_blank" rel="noopener noreferrer">Read More</a>
                 </Col>
               </Row>
             ))

@@ -1,20 +1,14 @@
 import { Button } from "react-bootstrap";
 
-function CategoryFilter({ selectedCategory, setSelectedCategory }) {
+function CategoryFilter({ selectedCategory, setSelectedCategory, newsData}) {
   // List of categories
-  const categories = [
-    "Sports",
-    "World",
-    "Technology",
-    "Health",
-    "Politics",
-    "Global",
-    "Entertainment",
-  ];
-  // Convert category names to uppercase
-  const upperCaseCategories = categories.map((category) =>
-    category.toUpperCase()
-  );
+  // extract souce names from api
+  const categories = newsData.map((article) => article.source.name);
+
+  // Remove duplicates using Set
+  const uniqueSourceNames = [...new Set(categories)]
+
+ 
 
   return (
     <>
@@ -22,7 +16,7 @@ function CategoryFilter({ selectedCategory, setSelectedCategory }) {
 
       {
         <div className="container d-flex justify-content-center flex-wrap mt-3">
-          {upperCaseCategories.map((category) => (
+          {uniqueSourceNames.map((category) => (
             <Button
               key={category}
               onClick={() => setSelectedCategory(category)} // Set the selected category when the button is clicked
