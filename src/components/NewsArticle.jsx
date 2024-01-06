@@ -8,9 +8,9 @@ import { InputGroup, FormControl, Button } from "react-bootstrap";
 
 function NewsArticle({ selectedCategory, newsData, setNewsData}) {
   // Define and initialize state variables
-  // const [newsData, setNewsData] = useState([]); // Store news data from the API
   const [searchQuery, setSearchQuery] = useState(""); // Store the user's search query
-  const News_article_api = "https://newsapi.org/v2/top-headlines?country=in&apiKey=6963b43a16de41029c6610f27e9cbabc"; // API endpoint
+  const API_KEY = "6963b43a16de41029c6610f27e9cbabc"
+  const News_article_api = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${API_KEY}`; // API endpoint
 
   // Fetch news data from an external API when the component mounts
   useEffect(() => {
@@ -18,7 +18,7 @@ function NewsArticle({ selectedCategory, newsData, setNewsData}) {
       .get(News_article_api)
       .then((response) => {
         setNewsData(response.data.articles); // Update newsData with the fetched data
-      })
+     })
       .catch((error) => {
         console.log("There is a problem with axios request");
       });
@@ -53,7 +53,7 @@ function NewsArticle({ selectedCategory, newsData, setNewsData}) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <Button className="ms-1 bg-danger text-light">
+            <Button className="ms-1 bg-danger text-light border-0" onClick={() => filteredNews}>
               <i className="fa fa-search "></i> Search
             </Button>
           </InputGroup>
@@ -65,11 +65,11 @@ function NewsArticle({ selectedCategory, newsData, setNewsData}) {
             filteredNews.map((article) => (
               <Row
                 key={article.source.id}
-                className="border border-secondary shadow mb-3"
+                className="border border-secondary shadow mb-3 rounded "
               >
                 <Col className="p-2" xs={12} md={4}>
                   <Image
-                    className="h-100"
+                    className="h-100 "
                     src={article.urlToImage}
                     alt="News Icon"
                     fluid
@@ -79,19 +79,19 @@ function NewsArticle({ selectedCategory, newsData, setNewsData}) {
 
                 <Col className="p-2" xs={12} md={8}>
                   {/* Article headline and category */}
-                  <h2>{article.title}</h2>
-                  <p>{`Source - ${article.source.name}`}</p>
+                  <h4>{article.title}</h4>
+                  <p className="text-secondary">{`Source - ${article.source.name}`}</p>
 
                   <div>
                     {/* Article hashtags */}
                    {article.description && (
-                    <p className="text-muted">{article.description}</p>
+                    <p className="text-light">{article.description}</p>
                    )}
                   </div>
                   <p>
                     <b>{`Published At - ${article.publishedAt}`}</b>
                   </p>
-                  <a href={article.url} target="_blank" rel="noopener noreferrer">Read More</a>
+                  <a href={article.url} target="_blank" rel="noopener noreferrer" className="read_more text-danger">Read More</a>
                 </Col>
               </Row>
             ))

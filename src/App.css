@@ -9,7 +9,7 @@
 
 /* || GENERAL STYLES || */
 body {
-  background: linear-gradient(to bottom, #343334e6, #151515);
+  background-image: radial-gradient( circle 815px at 23.4% -21.8%,  rgba(9,29,85,1) 0.2%, rgba(0,0,0,1) 100.2% ); /*gradient by cssgradient.io*/
   font-family: "Noto Serif", serif;
 }
 
@@ -21,6 +21,25 @@ body {
 /* || NEWS ARTICLE || */
 .news-list {
   margin: 0 8rem;
+}
+.read_more {
+  text-decoration: none;
+  color: white;
+  position: relative;
+}
+.read_more::before {
+  content: '';
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background-color: white;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  transition: width .4s;
+}
+.read_more:hover::before {
+  width: 100%;
 }
 
 /* || LAYOUT FOR SMALLER SCREENS || */
